@@ -43,8 +43,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "checkpoint.h"
 
 /*
- * datapath() models the superscalar speculative out-of-order
- * instruction pipeline modeled after MIPS R10K (as described in
+ * datapath() models a superscalar speculative out-of-order
+ * instruction pipeline based on MIPS R10K (as described in
  * [Yeager, "The MIPS R10000 superscalar microprocessor,"
  * 1996. https://ieeexplore.ieee.org/document/491460].)  The datapath
  * can also model ROB register renaming as an alternative to
@@ -85,17 +85,19 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * One invocation of datapath() corresponds to 1 cycle of the entire
  * out-of-order datapath.  The first part of the code generates the
- * combinational signals. In this first part, one query methods
- * (corredponding to combination logic) of datapath objects can be
+ * combinational signals. In this first part, only query methods
+ * (corredponding to combination logic) of datapath objects should be
  * invoked.  In the second part, synchronous state changes are
  * committed by either (1) writing to the static variables
- * indatapath() serving as pipeline registers or (2) invoking the
+ * in datapath() serving as pipeline registers or (2) invoking the
  * action methods of objects.
  *
  * Please refer to [Zhao and Hoe, "Using Vivado-HLS for Structural
  * Design: a NoC Case Study" 2017. arXiv:1710.10290] for a full
  * discussion of discipline on using C++ to model RTL.  Further, this
  * RTL model is compatible with Xilinx Vivado HLS synthesis.
+ *
+ * Single-step this code in a good debugger to warm up to it.
  */
 
 void datapath(bool I_Reset, // Must be asserted in the first-call to
