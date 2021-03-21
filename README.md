@@ -56,8 +56,12 @@ see [Hoe, "Superscalar Out-of-Order Demystified in Four Instructions,"
 for the motivation behind this approach to understanding superscalar
 out-of-order datapath.
 
+Despite the above, there is no easy way to casually engage the study
+superscalar out-of-order processor design.  With all the details,
+the model is complicated because the subject is complicated.
 This model is most useful if you have already read the Yeager paper
-and want to see the details in exactitude and in action.
+and want to see the details in exactitude and in action.  A textbook
+level understanding of Tomasulo is not a good starting point.
 
 ***The model is heavily instrumented with consistency/invariant
 checking assertions. The degree of paranoia is controlled by the
