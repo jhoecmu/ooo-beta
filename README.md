@@ -62,6 +62,9 @@ the model is complicated because the subject is complicated.
 This model is most useful if you have already read the Yeager paper
 and want to see the details in exactitude and in action.  A textbook
 level understanding of Tomasulo is not a good starting point.
+Keep in mind, R10K is more than 20 years old. Today, this model is, 
+at best, a baseline for you to start to understand the ensuing advances 
+in the interest of higher performance and energy efficiency.
 
 ***The model is heavily instrumented with consistency/invariant
 checking assertions. The degree of paranoia is controlled by the
