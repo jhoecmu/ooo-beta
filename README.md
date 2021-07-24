@@ -97,4 +97,4 @@ Todo:
 
 --------------
 
-Visit [https://users.ece.cmu.edu/~jhoe/doku/doku.php?id=a_term_project_for_teaching_superscalar_out-of-order] to find additional information.
+Visit https://users.ece.cmu.edu/~jhoe/doku/doku.php?id=a_term_project_for_teaching_superscalar_out-of-order to find additional information.
