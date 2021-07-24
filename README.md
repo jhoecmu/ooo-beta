@@ -95,4 +95,6 @@ Todo:
 * (Beyond R10K) SMT should be fun
 * (Beyond R10K) Alpha clustered scheduling/execution 
 
+--------------
 
+Visit [https://users.ece.cmu.edu/~jhoe/doku/doku.php?id=a_term_project_for_teaching_superscalar_out-of-order] to find additional information.
