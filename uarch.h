@@ -52,9 +52,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if (!UARCH_USE_BASELINE)
 
 // for hacking
-#define UARCH_DECODE_WIDTH    (4)
-#define UARCH_RETIRE_WIDTH    (4)
-#define UARCH_EXECUTE_WIDTH   (3)
+#define UARCH_DECODE_WIDTH    (1)
+#define UARCH_RETIRE_WIDTH    (1)
+#define UARCH_EXECUTE_WIDTH   (1)
 #define UARCH_OOO_DEGREE      (32)  // size of ROB
 #define UARCH_INSTQ_SIZE      (16)  // size of each InstQ
 #define UARCH_SPECULATE_DEPTH (4)   // depth of BR stack
