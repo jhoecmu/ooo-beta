@@ -26,7 +26,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "sim.h"
 #include "arch.h"
 
-// a minimal first example with RAW and WAA
+// a minimal first example with RAW and WAW
 
 static Instruction test[]={
   {.opcode=ADD, .rd=R3, .rs1=R1, .rs2=R4},
