@@ -127,23 +127,40 @@ cyc1:D    :s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
     depth of speculation after misprediction.  This info is magical.>>
 
 cyc2: I   :s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
+
 cyc2:D    :s1(0)ADD rd=R2 rs1=R1 rs2=R3 :: td=t33 ts1=t1 ts2=t32 0000
-<< In cycle 2, instruction s1 is decoded; s0 is issued.>>  
+
+    << In cycle 2, instruction s1 is decoded; s0 is issued.>>  
+    
 cyc3:  O  :s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
+
 cyc3: I   :s1(0)ADD rd=R2 rs1=R1 rs2=R3 :: td=t33 ts1=t1 ts2=t32 0000
+
 cyc3:D    :s2(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t34 ts1=t1 ts2=t4 0000
-<< In cycle 3, instruction s2 is decoded; s1 is issued.
+
+    << In cycle 3, instruction s2 is decoded; s1 is issued.
    s0 is fetching operand from RF in cyc 5.>>  
+
 cyc4:  O  :s1(0)ADD rd=R2 rs1=R1 rs2=R3 :: td=t33 ts1=t1 ts2=t32 0000
+
 cyc4:   E :s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
+
 cyc4: I   :s2(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t34 ts1=t1 ts2=t4 0000
+
 cyc4:D    :s3(0)ADD rd=R4 rs1=R3 rs2=R4 :: td=t35 ts1=t34 ts2=t4 0000
-<< Self explanatory.  s0 is executing in cyc 5.>>  
+
+    << Self explanatory.  s0 is executing in cyc 5.>>  
+
 cyc5:  O  :s2(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t34 ts1=t1 ts2=t4 0000
+
 cyc5:    R:s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
+
 cyc5:   E :s1(0)ADD rd=R2 rs1=R1 rs2=R3 :: td=t33 ts1=t1 ts2=t32 0000
+
 cyc5: I   :s3(0)ADD rd=R4 rs1=R3 rs2=R4 :: td=t35 ts1=t34 ts2=t4 0000
-<< Self explanatory.  s0 is retireing in cyc 5.>> 
+
+    << Self explanatory.  s0 is retireing in cyc 5.>> 
+
 ...
   
 
