@@ -26,6 +26,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "sim.h"
 #include "arch.h"
 
+// small example of register data dependence, without control flow
+
 static Instruction test[]={
   {.opcode=ADD, .rd=R0, .rs1=R5, .rs2=R4},
   {.opcode=ADD, .rd=R1, .rs1=R0, .rs2=R5},
