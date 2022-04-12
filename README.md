@@ -82,31 +82,33 @@ To get started:
 
 Type "make" to build the executable "ooo".  
 
-1. An execution of "ooo" simulates the instruction pipeline's
+An execution of "ooo" simulates the instruction pipeline's
 cycle-by-cycle RTL events.  To become familiar with this model
 initially, execute "ooo" in a good debugger so you can step through
 the RTL modeled events.  You can control error checking and debugging
 print by setting DEBUG_LEVEL in sim.h.
 
-2. As unpacked, the datapath is configured to be R10K like (see uarch.h).
+As unpacked, the datapath is configured to be R10K like (see uarch.h).
 The executable built is configured execute a 100,000-long randomly generated 
 instruction trace.  The trace is configured in trace.h.  The screen output should match
-reference1. (You can test that by "make regress1".)
+reference1. (You can test that by "make regress1".
 
-3. You can set #define UARCH_ROB_RENAME (1) in uarch.h to configure the
+You can set #define UARCH_ROB_RENAME (1) in uarch.h to configure the
 datapath to use the ROB (instead of a R10K's physical registerfile) to
 hold renamed register outputs of speculative instructions.  The screen output should match
 reference2. ("make regress2")  Beyond this you can experiment with 
 customizing the datapath configuration in uarch.h.
 
-4. To start, you may want examine a simpler datapath. Try reduce the superscalar degree
+To start, you may want examine a simpler datapath. Try reduce the superscalar degree
 width in uarch.h.
 
 #define UARCH_DECODE_WIDTH    (1)
+
 #define UARCH_RETIRE_WIDTH    (1)
+
 #define UARCH_EXECUTE_WIDTH   (1)
 
-5. If you want to study the behavior of specific instruction fragments, you
+If you want to study the behavior of specific instruction fragments, you
 can set #define TRACE_RANDOM (0) in trace.h.  This will execute from the
 instruction sequence in test.h.  Edit test.h to your liking.  (see test.h 
 and arch.h for guidence.)  You only have ADD and BEQ instructions.  Any 
@@ -124,7 +126,7 @@ static Instruction test[]={
   {.opcode=ADD, .rd=R4, .rs1=R3, .rs2=R4},
 };
 
-6 if you run the above simple test with the non-superscalar uarh suggested, you should
+If you run the above simple test with the non-superscalar uarh suggested, you should
 see the following screen output.  In the below << are my comments >>
 
 cyc1:D    :s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
