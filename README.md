@@ -89,14 +89,14 @@ the RTL modeled events.  You can control error checking and debugging
 print by setting DEBUG_LEVEL in sim.h.
 
 As unpacked, the datapath is configured to be R10K like (see uarch.h).
-The executable built is configured execute a 100,000-long randomly generated 
+The executable built is configured to execute a 100,000-long randomly generated 
 instruction trace.  The trace is configured in trace.h.  The screen output should match
 reference1. You can test that by "make regress1".
 
 You can set #define UARCH_ROB_RENAME (1) in uarch.h to configure the
-datapath to use the ROB (instead of a R10K's physical registerfile) to
+datapath to use the ROB (instead of R10K's physical register file) to
 hold renamed register outputs of speculative instructions.  The screen output should match
-reference2. ("make regress2")  Beyond this you can experiment with 
+reference2 ("make regress2").  Beyond this, you can experiment with 
 customizing the datapath configuration in uarch.h.
 
 To start, you may want to study the behavior of a simpler datapath. Try reducing the superscalar degree
@@ -110,20 +110,25 @@ in uarch.h.
 
 If you want to study the behavior of a specific instruction fragment, you
 can set #define TRACE_RANDOM (0) in trace.h.  This will execute from the
-instruction sequence in test.h.  Edit test.h to your liking.  You only have ADD and BEQ instructions.  Any 
+instruction sequence in test.h.  Edit test.h to your liking.  (See test.h 
+and arch.h for detail.)  You only have ADD and BEQ instructions.  Any 
 instruction can be optionaly tagged to trap (forcing the pipeline to drain 
 and restart).  BEQ needs to be pre-designated to resolve, when executed, 
-as predicted correctly or incorrectly. Branch msprediction forces an 
-immediate rewind and restart. (See test.h 
-and arch.h for detail.)  
+as predicted correctly or incorrectly. Branch misprediction forces an 
+immediate rewind and restart.  
 
 An interesting small example with WAW is:
 
 static Instruction test[]={
+
   {.opcode=ADD, .rd=R3, .rs1=R1, .rs2=R4},
+  
   {.opcode=ADD, .rd=R2, .rs1=R1, .rs2=R3},
+  
   {.opcode=ADD, .rd=R3, .rs1=R1, .rs2=R4},
+  
   {.opcode=ADD, .rd=R4, .rs1=R3, .rs2=R4},
+  
 };
 
 If you run the above simple test with the non-superscalar uarh suggested, you should
