@@ -108,6 +108,8 @@ in uarch.h.
 
 #define UARCH_EXECUTE_WIDTH   (1)
 
+(The above is the default alternate configuration enabled by #define UARCH_USE_BASELINE (0) .)  
+
 If you want to study the behavior of a specific instruction fragment, you
 can set #define TRACE_RANDOM (0) in trace.h.  This will execute from the
 instruction sequence in test.h.  Edit test.h to your liking.  (See test.h 
@@ -133,7 +135,7 @@ static Instruction test[]={
 
 --------------
 
-If you run the above simple test with the non-superscalar uarh suggested, you should
+If you run the above simple test with the non-superscalar uarh suggested (#define UARCH_USE_BASELINE (0) in uarch.h), you should
 see the following screen output.
 
 cyc1:D    :s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
@@ -179,7 +181,7 @@ cyc5: I   :s3(0)ADD rd=R4 rs1=R3 rs2=R4 :: td=t35 ts1=t34 ts2=t4 0000
 --------------
   
 
-Going back to the default R10K-based wide uarch produces more interesting behaviors.  
+Going back to the default R10K-based wide uarch (#define UARCH_USE_BASELINE (1) in uarch.h) produces more interesting behaviors.  
 
 cyc1:D    :s3(0)ADD rd=R4 rs1=R3 rs2=R4 :: td=t35 ts1=t34 ts2=t4 0000
 
