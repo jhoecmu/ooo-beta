@@ -99,17 +99,83 @@ hold renamed output of speculative instructions.  The output should match
 reference2. ("make regress2")  Beyond this you can experiment with 
 reconfiguring the datapath in uarch.h.
 
-4. If you want to study the behavior of specific instruction fragments, you
-can set #define TRACE_RANDOM (0) in trace.h.  This will execute from the
-instruction sequence in test.h.  Edit test.h to your liking.  You can
-only play with ADD and BEQ instructions.  An instruction can optional be
-tagged to trap (forcing the pipeline to drain and restart).  BEQ needs to
-be tagged to resolve as predicted correctly or incorrectly. 
-(See test.h and arch.h.)
+4. To start, you want a simpler datapath. Try reduce the superscalar degree
+width in uarch.h.
 
+#define UARCH_DECODE_WIDTH    (1)
+#define UARCH_RETIRE_WIDTH    (1)
+#define UARCH_EXECUTE_WIDTH   (1)
+
+5. If you want to study the behavior of specific instruction fragments, you
+can set #define TRACE_RANDOM (0) in trace.h.  This will execute from the
+instruction sequence in test.h.  Edit test.h to your liking.  (see test.h 
+and arch.h for guidence.)  You only have ADD and BEQ instructions.  Any 
+instruction can optionaly tagged to trap (forcing the pipeline to drain 
+and restart).  BEQ needs to be pre-designated to resolve, when executed, 
+as predicted correctly or incorrectly. Branch msprediction forces an 
+immediate rewind and restart. 
+
+6 if you run the above simple test with the non-superscalar uarh, you should
+see the following output.  In the below <<are my comments>>
+
+cyc1:D    :s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
+<<  In cycle 1, instruction serial #0 (Add r3,r1,r4) is decoded.
+    td, ts1 and ts2 are the renamed physical register locations.
+    0000 is the branch stack mask.>>
+<<  The number in parenthesis after the serial number is the 
+    depth of speculation after misprediction.  This info is magical.>>
+cyc2: I   :s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
+cyc2:D    :s1(0)ADD rd=R2 rs1=R1 rs2=R3 :: td=t33 ts1=t1 ts2=t32 0000
+<< In cycle 2, instruction s1 is decoded; s0 is issued.>>  
+cyc3:  O  :s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
+cyc3: I   :s1(0)ADD rd=R2 rs1=R1 rs2=R3 :: td=t33 ts1=t1 ts2=t32 0000
+cyc3:D    :s2(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t34 ts1=t1 ts2=t4 0000
+<< In cycle 3, instruction s2 is decoded; s1 is issued.
+   s0 is fetching operand from RF in cyc 5.>>  
+cyc4:  O  :s1(0)ADD rd=R2 rs1=R1 rs2=R3 :: td=t33 ts1=t1 ts2=t32 0000
+cyc4:   E :s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
+cyc4: I   :s2(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t34 ts1=t1 ts2=t4 0000
+cyc4:D    :s3(0)ADD rd=R4 rs1=R3 rs2=R4 :: td=t35 ts1=t34 ts2=t4 0000
+<< Self explanatory.  s0 is executing in cyc 5.>>  
+cyc5:  O  :s2(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t34 ts1=t1 ts2=t4 0000
+cyc5:    R:s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
+cyc5:   E :s1(0)ADD rd=R2 rs1=R1 rs2=R3 :: td=t33 ts1=t1 ts2=t32 0000
+cyc5: I   :s3(0)ADD rd=R4 rs1=R3 rs2=R4 :: td=t35 ts1=t34 ts2=t4 0000
+<< Self explanatory.  s0 is retireing in cyc 5.>> 
+...
+  
+
+The original wide uarch produce more interesting behavior  
+cyc1:D    :s3(0)ADD rd=R4 rs1=R3 rs2=R4 :: td=t35 ts1=t34 ts2=t4 0000
+cyc1:D    :s2(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t34 ts1=t1 ts2=t4 0000
+cyc1:D    :s1(0)ADD rd=R2 rs1=R1 rs2=R3 :: td=t33 ts1=t1 ts2=t32 0000
+cyc1:D    :s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
+<< All 4 insts decoded in cycle 1.>>  
+cyc2: I   :s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
+cyc2: I   :s2(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t34 ts1=t1 ts2=t4 0000
+<< Only s0 and s2 are issued (with operand)  
+cyc3:  O  :s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
+cyc3:  O  :s2(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t34 ts1=t1 ts2=t4 0000
+cyc3: I   :s3(0)ADD rd=R4 rs1=R3 rs2=R4 :: td=t35 ts1=t34 ts2=t4 0000
+cyc3: I   :s1(0)ADD rd=R2 rs1=R1 rs2=R3 :: td=t33 ts1=t1 ts2=t32 0000
+<< s3 and s1 are issued. Operands from s0 and s2 will be ready with 
+   forwarding.>>  
+cyc4:  O  :s3(0)ADD rd=R4 rs1=R3 rs2=R4 :: td=t35 ts1=t34 ts2=t4 0000
+cyc4:  O  :s1(0)ADD rd=R2 rs1=R1 rs2=R3 :: td=t33 ts1=t1 ts2=t32 0000
+cyc4:   E :s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
+cyc4:   E :s2(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t34 ts1=t1 ts2=t4 0000
+cyc5:    R:s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
+<< s0 retires in cyc4. s2 is completed but cannot retire out of order. >>
+cyc5:   E :s3(0)ADD rd=R4 rs1=R3 rs2=R4 :: td=t35 ts1=t34 ts2=t4 0000
+cyc5:   E :s1(0)ADD rd=R2 rs1=R1 rs2=R3 :: td=t33 ts1=t1 ts2=t32 0000
+cyc6:    R:s1(0)ADD rd=R2 rs1=R1 rs2=R3 :: td=t33 ts1=t1 ts2=t32 0000
+cyc6:    R:s2(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t34 ts1=t1 ts2=t4 0000
+cyc6:    R:s3(0)ADD rd=R4 rs1=R3 rs2=R4 :: td=t35 ts1=t34 ts2=t4 0000
+<< superscalar retire of s1, s2 and s3 in order.>>
+  
 --------------
 
-Todo:
+Future work:
 * Need to finish comments (so far only datapath.cpp is "finished")
 * Try out Vivado HLS
 * (Beyond R10K) Add retirement map table option for faster exception restart
