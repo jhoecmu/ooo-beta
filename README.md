@@ -177,6 +177,7 @@ cyc5: I   :s3(0)ADD rd=R4 rs1=R3 rs2=R4 :: td=t35 ts1=t34 ts2=t4 0000
     << Self explanatory.  s0 is retiring in cyc 5.>> 
 
 
+--------------
   
 
 Going back to the default R10K-based wide uarch produces more interesting behaviors.  
@@ -195,7 +196,7 @@ cyc2: I   :s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
 
 cyc2: I   :s2(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t34 ts1=t1 ts2=t4 0000
 
-    << Only s0 and s2 are issued (with operand)  
+    << Only s0 and s2 are issued (operands ready)  
 
 cyc3:  O  :s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
 
