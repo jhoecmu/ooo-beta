@@ -165,32 +165,57 @@ cyc5: I   :s3(0)ADD rd=R4 rs1=R3 rs2=R4 :: td=t35 ts1=t34 ts2=t4 0000
   
 
 The original wide uarch produce more interesting behavior  
+
 cyc1:D    :s3(0)ADD rd=R4 rs1=R3 rs2=R4 :: td=t35 ts1=t34 ts2=t4 0000
+
 cyc1:D    :s2(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t34 ts1=t1 ts2=t4 0000
+
 cyc1:D    :s1(0)ADD rd=R2 rs1=R1 rs2=R3 :: td=t33 ts1=t1 ts2=t32 0000
+
 cyc1:D    :s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
-<< All 4 insts decoded in cycle 1.>>  
+
+    << All 4 insts decoded in cycle 1.>>  
+
 cyc2: I   :s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
+
 cyc2: I   :s2(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t34 ts1=t1 ts2=t4 0000
-<< Only s0 and s2 are issued (with operand)  
+
+    << Only s0 and s2 are issued (with operand)  
+
 cyc3:  O  :s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
+
 cyc3:  O  :s2(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t34 ts1=t1 ts2=t4 0000
+
 cyc3: I   :s3(0)ADD rd=R4 rs1=R3 rs2=R4 :: td=t35 ts1=t34 ts2=t4 0000
+
 cyc3: I   :s1(0)ADD rd=R2 rs1=R1 rs2=R3 :: td=t33 ts1=t1 ts2=t32 0000
-<< s3 and s1 are issued. Operands from s0 and s2 will be ready with 
+
+    << s3 and s1 are issued. Operands from s0 and s2 will be ready with 
    forwarding.>>  
+
 cyc4:  O  :s3(0)ADD rd=R4 rs1=R3 rs2=R4 :: td=t35 ts1=t34 ts2=t4 0000
+
 cyc4:  O  :s1(0)ADD rd=R2 rs1=R1 rs2=R3 :: td=t33 ts1=t1 ts2=t32 0000
+
 cyc4:   E :s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
+
 cyc4:   E :s2(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t34 ts1=t1 ts2=t4 0000
+
 cyc5:    R:s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
-<< s0 retires in cyc4. s2 is completed but cannot retire out of order. >>
+
+    << s0 retires in cyc4. s2 is completed but cannot retire out of order. >>
+
 cyc5:   E :s3(0)ADD rd=R4 rs1=R3 rs2=R4 :: td=t35 ts1=t34 ts2=t4 0000
+
 cyc5:   E :s1(0)ADD rd=R2 rs1=R1 rs2=R3 :: td=t33 ts1=t1 ts2=t32 0000
+
 cyc6:    R:s1(0)ADD rd=R2 rs1=R1 rs2=R3 :: td=t33 ts1=t1 ts2=t32 0000
+
 cyc6:    R:s2(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t34 ts1=t1 ts2=t4 0000
+
 cyc6:    R:s3(0)ADD rd=R4 rs1=R3 rs2=R4 :: td=t35 ts1=t34 ts2=t4 0000
-<< superscalar retire of s1, s2 and s3 in order.>>
+
+    << superscalar retire of s1, s2 and s3 in order.>>
   
 --------------
 
