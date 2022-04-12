@@ -131,16 +131,18 @@ static Instruction test[]={
   
 };
 
+--------------
+
 If you run the above simple test with the non-superscalar uarh suggested, you should
-see the following screen output.  In the below << are my comments >>
+see the following screen output.
 
 cyc1:D    :s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
 
-    <<  In cycle 1, instruction serial #0 (Add r3,r1,r4) is decoded.
+    <<  In cycle 1, instruction serial 0 (Add r3,r1,r4) is decoded.
     td, ts1 and ts2 are the renamed physical register locations.
-    0000 is the branch stack mask.>>
+    0000 is the branch rewind stack mask.>>
     <<  The number in parenthesis after the serial number is the 
-    depth of speculation after misprediction.  This info is magical.>>
+    depth of speculation on the wrong path. This info is magical.>>
 
 cyc2: I   :s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
 
@@ -175,12 +177,12 @@ cyc5:   E :s1(0)ADD rd=R2 rs1=R1 rs2=R3 :: td=t33 ts1=t1 ts2=t32 0000
 
 cyc5: I   :s3(0)ADD rd=R4 rs1=R3 rs2=R4 :: td=t35 ts1=t34 ts2=t4 0000
 
-    << Self explanatory.  s0 is retireing in cyc 5.>> 
+    << Self explanatory.  s0 is retiring in cyc 5.>> 
 
-...
+
   
 
-The default R10K-based wide uarch produces more interesting behaviors.  
+Going back to the default R10K-based wide uarch produces more interesting behaviors.  
 
 cyc1:D    :s3(0)ADD rd=R4 rs1=R3 rs2=R4 :: td=t35 ts1=t34 ts2=t4 0000
 
@@ -232,6 +234,9 @@ cyc6:    R:s2(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t34 ts1=t1 ts2=t4 0000
 cyc6:    R:s3(0)ADD rd=R4 rs1=R3 rs2=R4 :: td=t35 ts1=t34 ts2=t4 0000
 
     << superscalar retire of s1, s2 and s3 in order.>>
+  
+  
+Setting #define DEBUG_LEVEL DEBUG_VERBOSE in sim.h will also dump out the contents of the instruction queue (reservation stations) and active list (ROB) cycle-by-cycle.
   
 --------------
 
