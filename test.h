@@ -29,10 +29,10 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // a minimal first example with RAW and WAW
 
 static Instruction test[]={
-  {.opcode=ADD, .rd=R3, .rs1=R1, .rs2=R4},
-  {.opcode=ADD, .rd=R2, .rs1=R1, .rs2=R3},
-  {.opcode=ADD, .rd=R3, .rs1=R1, .rs2=R4},
-  {.opcode=ADD, .rd=R4, .rs1=R3, .rs2=R4},
+  {.opcode=ADD, .rd=R4, .rs1=R0, .rs2=R8},
+  {.opcode=ADD, .rd=R2, .rs1=R0, .rs2=R4},
+  {.opcode=ADD, .rd=R4, .rs1=R0, .rs2=R8},
+  {.opcode=ADD, .rd=R8, .rs1=R4, .rs2=R8},
 };
 
 #endif
