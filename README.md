@@ -219,13 +219,13 @@ cyc4:   E :s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
 
 cyc4:   E :s2(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t34 ts1=t1 ts2=t4 0000
 
-    << s0 retires in cyc4. s2 is completed but cannot retire out of order. >>
-
 cyc5:    R:s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
 
 cyc5:   E :s3(0)ADD rd=R4 rs1=R3 rs2=R4 :: td=t35 ts1=t34 ts2=t4 0000
 
 cyc5:   E :s1(0)ADD rd=R2 rs1=R1 rs2=R3 :: td=t33 ts1=t1 ts2=t32 0000
+
+    << s0 retires in cyc5. s2 is completed but cannot retire out of order ahead of s1. >>
 
 cyc6:    R:s1(0)ADD rd=R2 rs1=R1 rs2=R3 :: td=t33 ts1=t1 ts2=t32 0000
 
