@@ -96,11 +96,15 @@ instruction trace.  The trace is configured in trace.h.  The screen output shoul
 reference1. You can test that by "make regress1".
 
 You can set #define UARCH_ROB_RENAME (1) in uarch.h to configure the
-datapath to use the ROB (instead of R10K's physical register file) to
-hold renamed register outputs of speculative instructions.  The screen output should match
-reference2 ("make regress2").  Beyond this, you can experiment with 
-customizing the datapath configuration in uarch.h.
+datapath to use the ROB method (instead of R10K's freelist method) to manage the 
+the register file for committed and lookahead state.  (This is perhaps the 
+easier of the two methods to understand when starting.  With the ROB method, the bottom
+portion of the register file is associated 1-to-1 with committed architectural registers.
+The top portion of the register file is associated 1-to-1 with entries in the ROB.  Retiring instructions
+have to copy their dest values from lookahead registers to committed registers.)
+The screen output should match reference2 ("make regress2").  
 
+You can experiment with customizing individual datapath parameters in uarch.h.
 To start, you may want to study the behavior of a simpler datapath. Try reducing the superscalar degree
 in uarch.h.
 
@@ -113,7 +117,7 @@ in uarch.h.
 (The above is the default alternate configuration enabled by #define UARCH_USE_BASELINE (0) .)  
 
 If you want to study the behavior of a specific instruction fragment, you
-can set #define TRACE_RANDOM (0) in trace.h.  This will execute from the
+can set #define TRACE_RANDOM (0) in trace.h.  With this, ooo will execute from the
 instruction sequence in test.h.  Edit test.h to your liking.  (See test.h 
 and arch.h for detail.)  You only have ADD and BEQ instructions.  Any 
 instruction can be optionaly tagged to trap (forcing the pipeline to drain 
@@ -187,7 +191,7 @@ cyc5: I   :s3(0)ADD rd=R8 rs1=R4 rs2=R8 :: td=t35 ts1=t34 ts2=t4 0000
 --------------
   
 
-Going back to the default R10K-based wide uarch (#define UARCH_USE_BASELINE (1) in uarch.h) produces more interesting behaviors.  
+The default R10K-based wide uarch (#define UARCH_USE_BASELINE (1) in uarch.h) produces more interesting behaviors.  
 
 cyc1:D    :s3(0)ADD rd=R8 rs1=R4 rs2=R8 :: td=t35 ts1=t34 ts2=t4 0000
 
@@ -203,7 +207,7 @@ cyc2: I   :s0(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t32 ts1=t1 ts2=t4 0000
 
 cyc2: I   :s2(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t34 ts1=t1 ts2=t4 0000
 
-    << Only s0 and s2 are issued (operands ready)  
+    << In cyc 2, only s0 and s2 can issue (operands ready)  
 
 cyc3:  O  :s0(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t32 ts1=t1 ts2=t4 0000
 
@@ -213,7 +217,7 @@ cyc3: I   :s3(0)ADD rd=R8 rs1=R4 rs2=R8 :: td=t35 ts1=t34 ts2=t4 0000
 
 cyc3: I   :s1(0)ADD rd=R2 rs1=R0 rs2=R4 :: td=t33 ts1=t1 ts2=t32 0000
 
-    << s3 and s1 are issued. Operands from s0 and s2 will be ready with forwarding.>>  
+    << In cyc 3, s3 and s1 are issued. Operands to be produced by s0 and s2 will be ready with forwarding.>>  
 
 cyc4:  O  :s3(0)ADD rd=R8 rs1=R4 rs2=R8 :: td=t35 ts1=t34 ts2=t4 0000
 
@@ -223,13 +227,15 @@ cyc4:   E :s0(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t32 ts1=t1 ts2=t4 0000
 
 cyc4:   E :s2(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t34 ts1=t1 ts2=t4 0000
 
+    << In cyc 4, s3 and s1 will receive forwarding from s0 and s2 instead of the RF. >>
+
 cyc5:    R:s0(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t32 ts1=t1 ts2=t4 0000
 
 cyc5:   E :s3(0)ADD rd=R8 rs1=R4 rs2=R8 :: td=t35 ts1=t34 ts2=t4 0000
 
 cyc5:   E :s1(0)ADD rd=R2 rs1=R0 rs2=R4 :: td=t33 ts1=t1 ts2=t32 0000
 
-    << s0 retires in cyc5. s2 is completed but cannot retire out of order ahead of s1. >>
+    << s0 completes and retires in cyc5. s2 is completed but cannot retire out of order ahead of s1. >>
 
 cyc6:    R:s1(0)ADD rd=R2 rs1=R0 rs2=R4 :: td=t33 ts1=t1 ts2=t32 0000
 
