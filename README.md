@@ -135,7 +135,7 @@ static Instruction test[]={
 
 --------------
 
-If you run the above simple test with the non-superscalar uarch.h suggested (#define UARCH_USE_BASELINE (0) in uarch.h), you should
+If you run the above simple test with the non-superscalar uarch suggested above (#define UARCH_USE_BASELINE (0) in uarch.h), you should
 see the following screen output.
 
 cyc1:D    :s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
