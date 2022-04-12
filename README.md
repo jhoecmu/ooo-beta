@@ -119,11 +119,14 @@ immediate rewind and restart.
 see the following output.  In the below <<are my comments>>
 
 cyc1:D    :s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
+    
 <<  In cycle 1, instruction serial #0 (Add r3,r1,r4) is decoded.
     td, ts1 and ts2 are the renamed physical register locations.
     0000 is the branch stack mask.>>
+
 <<  The number in parenthesis after the serial number is the 
     depth of speculation after misprediction.  This info is magical.>>
+
 cyc2: I   :s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
 cyc2:D    :s1(0)ADD rd=R2 rs1=R1 rs2=R3 :: td=t33 ts1=t1 ts2=t32 0000
 << In cycle 2, instruction s1 is decoded; s0 is issued.>>  
