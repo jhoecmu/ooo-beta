@@ -138,11 +138,8 @@ see the following screen output.
 
 cyc1:D    :s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
 
-    <<  In cycle 1, instruction serial 0 (Add r3,r1,r4) is decoded.
-    td, ts1 and ts2 are the renamed physical register locations.
-    0000 is the branch rewind stack mask.>>
-    <<  The number in parenthesis after the serial number is the 
-    depth of instruction on the wrong path. Any instruction with depth greater than 0 will eventually be invalidated and removed. This bookkeeping info is magical.>>
+    <<  In cycle 1, instruction serial 0 (Add r3,r1,r4) is decoded.  td, ts1 and ts2 are the renamed physical register locations. 0000 is the branch rewind stack mask.>>
+    <<  The number in parenthesis after the serial number is the depth of instruction on the wrong path. Any instruction with depth greater than 0 will eventually be invalidated and removed. This bookkeeping info is magical.>>
 
 cyc2: I   :s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
 
