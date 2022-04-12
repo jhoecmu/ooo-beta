@@ -153,8 +153,7 @@ cyc3: I   :s1(0)ADD rd=R2 rs1=R1 rs2=R3 :: td=t33 ts1=t1 ts2=t32 0000
 
 cyc3:D    :s2(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t34 ts1=t1 ts2=t4 0000
 
-    << In cycle 3, instruction s2 is decoded; s1 is issued.
-   s0 is fetching operand from RF in cyc 5.>>  
+    << In cycle 3, instruction s2 is decoded; s1 is issued. s0 is fetching operand from RF in cyc 5.>>  
 
 cyc4:  O  :s1(0)ADD rd=R2 rs1=R1 rs2=R3 :: td=t33 ts1=t1 ts2=t32 0000
 
@@ -206,8 +205,7 @@ cyc3: I   :s3(0)ADD rd=R4 rs1=R3 rs2=R4 :: td=t35 ts1=t34 ts2=t4 0000
 
 cyc3: I   :s1(0)ADD rd=R2 rs1=R1 rs2=R3 :: td=t33 ts1=t1 ts2=t32 0000
 
-    << s3 and s1 are issued. Operands from s0 and s2 will be ready with 
-   forwarding.>>  
+    << s3 and s1 are issued. Operands from s0 and s2 will be ready with forwarding.>>  
 
 cyc4:  O  :s3(0)ADD rd=R4 rs1=R3 rs2=R4 :: td=t35 ts1=t34 ts2=t4 0000
 
