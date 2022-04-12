@@ -119,6 +119,7 @@ immediate rewind and restart.
 see the following output.  In the below << are my comments >>
 
 cyc1:D    :s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
+
     <<  In cycle 1, instruction serial #0 (Add r3,r1,r4) is decoded.
     td, ts1 and ts2 are the renamed physical register locations.
     0000 is the branch stack mask.>>
