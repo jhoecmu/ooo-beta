@@ -116,7 +116,7 @@ as predicted correctly or incorrectly. Branch msprediction forces an
 immediate rewind and restart. 
 
 6 if you run the above simple test with the non-superscalar uarh, you should
-see the following output.  In the below <<are my comments>>
+see the following output.  In the below << are my comments >>
 
 cyc1:D    :s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
     
