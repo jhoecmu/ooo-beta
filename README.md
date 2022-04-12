@@ -90,16 +90,16 @@ print by setting DEBUG_LEVEL in sim.h.
 
 2. As unpacked, the datapath is configured to be R10K like (see uarch.h).
 The executable built is configured execute a 100,000-long randomly generated 
-instruction trace.  The trace is configured in trace.h.  The output should match
+instruction trace.  The trace is configured in trace.h.  The screen output should match
 reference1. (You can test that by "make regress1".)
 
 3. You can set #define UARCH_ROB_RENAME (1) in uarch.h to configure the
 datapath to use the ROB (instead of a R10K's physical registerfile) to
-hold renamed output of speculative instructions.  The output should match
+hold renamed register outputs of speculative instructions.  The screen output should match
 reference2. ("make regress2")  Beyond this you can experiment with 
-reconfiguring the datapath in uarch.h.
+customizing the datapath configuration in uarch.h.
 
-4. To start, you want a simpler datapath. Try reduce the superscalar degree
+4. To start, you may want examine a simpler datapath. Try reduce the superscalar degree
 width in uarch.h.
 
 #define UARCH_DECODE_WIDTH    (1)
@@ -110,13 +110,22 @@ width in uarch.h.
 can set #define TRACE_RANDOM (0) in trace.h.  This will execute from the
 instruction sequence in test.h.  Edit test.h to your liking.  (see test.h 
 and arch.h for guidence.)  You only have ADD and BEQ instructions.  Any 
-instruction can optionaly tagged to trap (forcing the pipeline to drain 
+instruction can be optionaly tagged to trap (forcing the pipeline to drain 
 and restart).  BEQ needs to be pre-designated to resolve, when executed, 
 as predicted correctly or incorrectly. Branch msprediction forces an 
 immediate rewind and restart. 
 
-6 if you run the above simple test with the non-superscalar uarh, you should
-see the following output.  In the below << are my comments >>
+An interesting small example with WAW is:
+
+static Instruction test[]={
+  {.opcode=ADD, .rd=R3, .rs1=R1, .rs2=R4},
+  {.opcode=ADD, .rd=R2, .rs1=R1, .rs2=R3},
+  {.opcode=ADD, .rd=R3, .rs1=R1, .rs2=R4},
+  {.opcode=ADD, .rd=R4, .rs1=R3, .rs2=R4},
+};
+
+6 if you run the above simple test with the non-superscalar uarh suggested, you should
+see the following screen output.  In the below << are my comments >>
 
 cyc1:D    :s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
 
@@ -164,7 +173,7 @@ cyc5: I   :s3(0)ADD rd=R4 rs1=R3 rs2=R4 :: td=t35 ts1=t34 ts2=t4 0000
 ...
   
 
-The original wide uarch produce more interesting behavior  
+The default R10K-based wide uarch produces more interesting behaviors.  
 
 cyc1:D    :s3(0)ADD rd=R4 rs1=R3 rs2=R4 :: td=t35 ts1=t34 ts2=t4 0000
 
