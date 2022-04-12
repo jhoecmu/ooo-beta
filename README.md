@@ -73,17 +73,41 @@ entities flowing in the datapath carries a magic cookie of expected
 operand value and instruction outcome precomputed by the trace
 generator.
 
+Continue reading datapath.h, arch.h, uarch.h, and trace.h to understand
+the code more
+
 --------------
+
+To get started:
 
 Type "make" to build the executable "ooo".  
 
-An execution of "ooo" simulates the instruction pipeline's
+1. An execution of "ooo" simulates the instruction pipeline's
 cycle-by-cycle RTL events.  To become familiar with this model
 initially, execute "ooo" in a good debugger so you can step through
 the RTL modeled events.  You can control error checking and debugging
 print by setting DEBUG_LEVEL in sim.h.
 
-Continue reading datapath.h, arch.h, uarch.h, and trace.h.
+2. As unpacked, the datapath is configured to be R10K like (see uarch.h).
+The executable built is configured execute a 100,000-long randomly generated 
+instruction trace.  The trace is configured in trace.h.  The output should match
+reference1. (You can test that by "make regress1".)
+
+3. You can set #define UARCH_ROB_RENAME (1) in uarch.h to configure the
+datapath to use the ROB (instead of a R10K's physical registerfile) to
+hold renamed output of speculative instructions.  The output should match
+reference2. ("make regress2")  Beyond this you can experiment with 
+reconfiguring the datapath in uarch.h.
+
+4. If you want to study the behavior of specific instruction fragments, you
+can set #define TRACE_RANDOM (0) in trace.h.  This will execute from the
+instruction sequence in test.h.  Edit test.h to your liking.  You can
+only play with ADD and BEQ instructions.  An instruction can optional be
+tagged to trap (forcing the pipeline to drain and restart).  BEQ needs to
+be tagged to resolve as predicted correctly or incorrectly. 
+(See test.h and arch.h.)
+
+--------------
 
 Todo:
 * Need to finish comments (so far only datapath.cpp is "finished")
