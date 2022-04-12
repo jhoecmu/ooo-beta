@@ -74,7 +74,9 @@ operand value and instruction outcome precomputed by the trace
 generator.
 
 Continue reading datapath.h, arch.h, uarch.h, and trace.h to understand
-the code more
+the code more.
+
+Visit https://users.ece.cmu.edu/~jhoe/doku/doku.php?id=a_term_project_for_teaching_superscalar_out-of-order to find additional information.
 
 --------------
 
