@@ -147,7 +147,8 @@ cyc2: I   :s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
 
 cyc2:D    :s1(0)ADD rd=R2 rs1=R1 rs2=R3 :: td=t33 ts1=t1 ts2=t32 0000
 
-    << In cycle 2, instruction s1 is decoded; s0 is issued.>>  
+    << In cycle 2, instruction s1 is decoded; s0 is issued.>>
+    << Note that the R3 input of s1 is renamed to t32, the renamed dest of s0.
     
 cyc3:  O  :s0(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t32 ts1=t1 ts2=t4 0000
 
@@ -155,7 +156,8 @@ cyc3: I   :s1(0)ADD rd=R2 rs1=R1 rs2=R3 :: td=t33 ts1=t1 ts2=t32 0000
 
 cyc3:D    :s2(0)ADD rd=R3 rs1=R1 rs2=R4 :: td=t34 ts1=t1 ts2=t4 0000
 
-    << In cycle 3, instruction s2 is decoded; s1 is issued; s0 is fetching operand from RF.>>  
+    << In cycle 3, instruction s2 is decoded; s1 is issued; s0 is fetching operand from RF.>>
+    << Note that R3 of s0 and s2 are renamed to t32 and t34, respectively.
 
 cyc4:  O  :s1(0)ADD rd=R2 rs1=R1 rs2=R3 :: td=t33 ts1=t1 ts2=t32 0000
 
