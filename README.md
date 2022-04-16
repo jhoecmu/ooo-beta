@@ -1,5 +1,6 @@
 /*********************************************************************
-Copyright 2019 James C. Hoe
+
+Copyright 2022 James C. Hoe
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
