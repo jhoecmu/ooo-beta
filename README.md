@@ -167,7 +167,7 @@ cyc3:D    :s2(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t34 ts1=t0 ts2=t8 0000
 
 
     << In cycle 3, instruction s2 is decoded; s1 is issued; s0 is fetching operand from RF.>>
-    << Note that R4 of s0 and s2 are renamed to t32 and t34, respectively.
+    << Note that dest R4 of s0 and s2 are renamed to t32 and t34, respectively.
 
 cyc4:  O  :s1(0)ADD rd=R2 rs1=R0 rs2=R4 :: td=t33 ts1=t0 ts2=t32 0000
 
