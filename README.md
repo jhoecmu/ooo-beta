@@ -145,46 +145,47 @@ static Instruction test[]={
 If you run the above simple test with the non-superscalar uarch suggested above (#define UARCH_USE_BASELINE (0) in uarch.h), you should
 see the following screen output.
 
-cyc1:D    :s0(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t32 ts1=t1 ts2=t4 0000
+cyc1:D    :s0(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t32 ts1=t0 ts2=t8 0000
 
-    <<  In cycle 1, instruction serial 0 (Add r3,r1,r4) is decoded.  td, ts1 and ts2 are the renamed physical register locations. 0000 is the branch rewind stack mask.>>
+    <<  In cycle 1, instruction serial 0 (Add r4,r0,r8) is decoded.  td, ts1 and ts2 are the renamed physical register locations. 0000 is the branch rewind stack mask.>>
     <<  In lieu of a program counter value, each instruction in the trace has a globally unique serial number.  >> 
     <<  The letter preceeding the serial number is the stage the instruction is in: Decode, Issue, OperandFetch, Execute, Retire. >>
     <<  The number in parenthesis after the serial number is the depth of instruction on the wrong path. Any instruction with depth greater than 0 will eventually be invalidated and removed. This info is "magical" and not used by the datapath model.>>
 
-cyc2: I   :s0(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t32 ts1=t1 ts2=t4 0000
+cyc2: I   :s0(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t32 ts1=t0 ts2=t8 0000
 
-cyc2:D    :s1(0)ADD rd=R2 rs1=R0 rs2=R4 :: td=t33 ts1=t1 ts2=t32 0000
+cyc2:D    :s1(0)ADD rd=R2 rs1=R0 rs2=R4 :: td=t33 ts1=t0 ts2=t32 0000
 
     << In cycle 2, instruction s1 is decoded; s0 is issued.>>
     << Note that the R4 input of s1 is renamed to t32, the renamed dest of s0.
     
-cyc3:  O  :s0(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t32 ts1=t1 ts2=t4 0000
+cyc3:  O  :s0(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t32 ts1=t0 ts2=t8 0000
 
-cyc3: I   :s1(0)ADD rd=R2 rs1=R0 rs2=R4 :: td=t33 ts1=t1 ts2=t32 0000
+cyc3: I   :s1(0)ADD rd=R2 rs1=R0 rs2=R4 :: td=t33 ts1=t0 ts2=t32 0000
 
-cyc3:D    :s2(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t34 ts1=t1 ts2=t4 0000
+cyc3:D    :s2(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t34 ts1=t0 ts2=t8 0000
+
 
     << In cycle 3, instruction s2 is decoded; s1 is issued; s0 is fetching operand from RF.>>
     << Note that R4 of s0 and s2 are renamed to t32 and t34, respectively.
 
-cyc4:  O  :s1(0)ADD rd=R2 rs1=R0 rs2=R4 :: td=t33 ts1=t1 ts2=t32 0000
+cyc4:  O  :s1(0)ADD rd=R2 rs1=R0 rs2=R4 :: td=t33 ts1=t0 ts2=t32 0000
 
-cyc4:   E :s0(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t32 ts1=t1 ts2=t4 0000
+cyc4:   E :s0(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t32 ts1=t0 ts2=t8 0000
 
-cyc4: I   :s2(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t34 ts1=t1 ts2=t4 0000
+cyc4: I   :s2(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t34 ts1=t0 ts2=t8 0000
 
-cyc4:D    :s3(0)ADD rd=R8 rs1=R4 rs2=R8 :: td=t35 ts1=t34 ts2=t4 0000
+cyc4:D    :s3(0)ADD rd=R8 rs1=R4 rs2=R8 :: td=t35 ts1=t34 ts2=t8 0000
 
     << Self explanatory.  s0 is executing in cyc 4.>>  
 
-cyc5:  O  :s2(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t34 ts1=t1 ts2=t4 0000
+cyc5:  O  :s2(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t34 ts1=t0 ts2=t8 0000
 
-cyc5:    R:s0(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t32 ts1=t1 ts2=t4 0000
+cyc5:    R:s0(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t32 ts1=t0 ts2=t8 0000
 
-cyc5:   E :s1(0)ADD rd=R2 rs1=R0 rs2=R4 :: td=t33 ts1=t1 ts2=t32 0000
+cyc5:   E :s1(0)ADD rd=R2 rs1=R0 rs2=R4 :: td=t33 ts1=t0 ts2=t32 0000
 
-cyc5: I   :s3(0)ADD rd=R8 rs1=R4 rs2=R8 :: td=t35 ts1=t34 ts2=t4 0000
+cyc5: I   :s3(0)ADD rd=R8 rs1=R4 rs2=R8 :: td=t35 ts1=t34 ts2=t8 0000
 
     << Self explanatory.  s0 is retiring in cyc 5.>> 
 
@@ -194,55 +195,55 @@ cyc5: I   :s3(0)ADD rd=R8 rs1=R4 rs2=R8 :: td=t35 ts1=t34 ts2=t4 0000
 
 The default R10K-based wide uarch (#define UARCH_USE_BASELINE (1) in uarch.h) produces more interesting behaviors.  
 
-cyc1:D    :s3(0)ADD rd=R8 rs1=R4 rs2=R8 :: td=t35 ts1=t34 ts2=t4 0000
+cyc1:D    :s3(0)ADD rd=R8 rs1=R4 rs2=R8 :: td=t35 ts1=t34 ts2=t8 0000
 
-cyc1:D    :s2(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t34 ts1=t1 ts2=t4 0000
+cyc1:D    :s2(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t34 ts1=t0 ts2=t8 0000
 
-cyc1:D    :s1(0)ADD rd=R2 rs1=R0 rs2=R4 :: td=t33 ts1=t1 ts2=t32 0000
+cyc1:D    :s1(0)ADD rd=R2 rs1=R0 rs2=R4 :: td=t33 ts1=t0 ts2=t32 0000
 
-cyc1:D    :s0(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t32 ts1=t1 ts2=t4 0000
+cyc1:D    :s0(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t32 ts1=t0 ts2=t8 0000
 
     << All 4 insts decoded in cycle 1.>>  
 
-cyc2: I   :s0(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t32 ts1=t1 ts2=t4 0000
+cyc2: I   :s0(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t32 ts1=t0 ts2=t8 0000
 
-cyc2: I   :s2(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t34 ts1=t1 ts2=t4 0000
+cyc2: I   :s2(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t34 ts1=t0 ts2=t8 0000
 
     << In cyc 2, only s0 and s2 can issue (operands ready)  
 
-cyc3:  O  :s0(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t32 ts1=t1 ts2=t4 0000
+cyc3:  O  :s0(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t32 ts1=t0 ts2=t8 0000
 
-cyc3:  O  :s2(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t34 ts1=t1 ts2=t4 0000
+cyc3:  O  :s2(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t34 ts1=t0 ts2=t8 0000
 
-cyc3: I   :s3(0)ADD rd=R8 rs1=R4 rs2=R8 :: td=t35 ts1=t34 ts2=t4 0000
+cyc3: I   :s3(0)ADD rd=R8 rs1=R4 rs2=R8 :: td=t35 ts1=t34 ts2=t8 0000
 
-cyc3: I   :s1(0)ADD rd=R2 rs1=R0 rs2=R4 :: td=t33 ts1=t1 ts2=t32 0000
+cyc3: I   :s1(0)ADD rd=R2 rs1=R0 rs2=R4 :: td=t33 ts1=t0 ts2=t32 0000
 
     << In cyc 3, s3 and s1 are issued. Operands to be produced by s0 and s2 will be ready with forwarding.>>  
 
-cyc4:  O  :s3(0)ADD rd=R8 rs1=R4 rs2=R8 :: td=t35 ts1=t34 ts2=t4 0000
+cyc4:  O  :s3(0)ADD rd=R8 rs1=R4 rs2=R8 :: td=t35 ts1=t34 ts2=t8 0000
 
-cyc4:  O  :s1(0)ADD rd=R2 rs1=R0 rs2=R4 :: td=t33 ts1=t1 ts2=t32 0000
+cyc4:  O  :s1(0)ADD rd=R2 rs1=R0 rs2=R4 :: td=t33 ts1=t0 ts2=t32 0000
 
-cyc4:   E :s0(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t32 ts1=t1 ts2=t4 0000
+cyc4:   E :s0(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t32 ts1=t0 ts2=t8 0000
 
-cyc4:   E :s2(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t34 ts1=t1 ts2=t4 0000
+cyc4:   E :s2(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t34 ts1=t0 ts2=t8 0000
 
     << In cyc 4, s3 and s1 will receive forwarding from s0 and s2 instead of the RF. >>
 
-cyc5:    R:s0(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t32 ts1=t1 ts2=t4 0000
+cyc5:    R:s0(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t32 ts1=t0 ts2=t8 0000
 
-cyc5:   E :s3(0)ADD rd=R8 rs1=R4 rs2=R8 :: td=t35 ts1=t34 ts2=t4 0000
+cyc5:   E :s3(0)ADD rd=R8 rs1=R4 rs2=R8 :: td=t35 ts1=t34 ts2=t8 0000
 
-cyc5:   E :s1(0)ADD rd=R2 rs1=R0 rs2=R4 :: td=t33 ts1=t1 ts2=t32 0000
+cyc5:   E :s1(0)ADD rd=R2 rs1=R0 rs2=R4 :: td=t33 ts1=t0 ts2=t32 0000
 
     << s0 completes and retires in cyc5. s2 is completed but cannot retire out of order ahead of s1. >>
 
-cyc6:    R:s1(0)ADD rd=R2 rs1=R0 rs2=R4 :: td=t33 ts1=t1 ts2=t32 0000
+cyc6:    R:s1(0)ADD rd=R2 rs1=R0 rs2=R4 :: td=t33 ts1=t0 ts2=t32 0000
 
-cyc6:    R:s2(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t34 ts1=t1 ts2=t4 0000
+cyc6:    R:s2(0)ADD rd=R4 rs1=R0 rs2=R8 :: td=t34 ts1=t0 ts2=t8 0000
 
-cyc6:    R:s3(0)ADD rd=R8 rs1=R4 rs2=R8 :: td=t35 ts1=t34 ts2=t4 0000
+cyc6:    R:s3(0)ADD rd=R8 rs1=R4 rs2=R8 :: td=t35 ts1=t34 ts2=t8 0000
 
     << superscalar retire of s1, s2 and s3 in order.>>
   
